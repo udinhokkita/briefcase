@@ -31,7 +31,7 @@ export const HomeScreen: React.FC = () => {
 
   return (
     <Screen>
-      <TopBar subtitle={`${t('home_greeting')}, ${user.name.split(' ')[0]} 👋`} title="Laman Utama" />
+      <TopBar subtitle={`${t('home_greeting')}, ${user.name.split(' ')[0]} 👋`} title={t('tab_home')} />
 
       <TouchableOpacity activeOpacity={0.85} onPress={() => nav.navigate('MainTabs')}>
         <Card style={styles.rankCard}>
