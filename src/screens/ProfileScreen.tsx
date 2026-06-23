@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { colors, radius, spacing } from '../theme/colors';
-import { Screen, Card, H2, Body, Button, Divider } from '../components/ui';
+import { colors, radius, spacing, gradients, shadow } from '../theme/colors';
+import { Screen, Card, GradientCard, H2, Body, Button, Divider } from '../components/ui';
 import { Avatar } from '../components/Avatar';
 import { RadarChart } from '../components/RadarChart';
 import { GameStatCard } from '../components/GameStatCard';
@@ -90,14 +90,16 @@ export const ProfileScreen: React.FC = () => {
 
       {!user.pro && (
         <TouchableOpacity activeOpacity={0.9} onPress={upgradeToPro}>
-          <Card style={styles.proCard}>
-            <Ionicons name="rocket" size={24} color={colors.bg} />
+          <GradientCard colorsArr={gradients.pro} glow style={styles.proCard}>
+            <View style={styles.proIcon}>
+              <Ionicons name="rocket" size={22} color={colors.bg} />
+            </View>
             <View style={{ flex: 1, marginLeft: spacing.md }}>
               <Text style={styles.proTitle}>{t('upgrade_pro')}</Text>
               <Text style={styles.proSub}>{t('pro_blurb')}</Text>
             </View>
             <Ionicons name="chevron-forward" size={20} color={colors.bg} />
-          </Card>
+          </GradientCard>
         </TouchableOpacity>
       )}
 
@@ -184,12 +186,13 @@ const styles = StyleSheet.create({
   social: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: colors.cardAlt, paddingHorizontal: 10, paddingVertical: 5, borderRadius: radius.sm },
   socialText: { color: colors.textMuted, fontSize: 12 },
   statRow: { flexDirection: 'row', gap: spacing.md, marginBottom: spacing.md },
-  statBox: { flex: 1, backgroundColor: colors.card, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, paddingVertical: spacing.md, alignItems: 'center' },
-  statValue: { color: colors.primary, fontWeight: '900', fontSize: 20 },
-  statLabel: { color: colors.textMuted, fontSize: 11, marginTop: 2, textAlign: 'center' },
-  proCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.primary, borderColor: colors.primary },
-  proTitle: { color: colors.bg, fontWeight: '800', fontSize: 15 },
-  proSub: { color: colors.bg, opacity: 0.8, fontSize: 12, marginTop: 2 },
+  statBox: { flex: 1, backgroundColor: colors.card, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, paddingVertical: spacing.lg, alignItems: 'center', ...shadow.soft },
+  statValue: { color: colors.primary, fontWeight: '900', fontSize: 22 },
+  statLabel: { color: colors.textMuted, fontSize: 11, marginTop: 4, textAlign: 'center' },
+  proCard: { flexDirection: 'row', alignItems: 'center' },
+  proIcon: { width: 42, height: 42, borderRadius: 14, backgroundColor: 'rgba(0,0,0,0.18)', alignItems: 'center', justifyContent: 'center' },
+  proTitle: { color: colors.bg, fontWeight: '900', fontSize: 16 },
+  proSub: { color: colors.bg, opacity: 0.85, fontSize: 12, marginTop: 2 },
   section: { marginTop: spacing.sm, marginBottom: spacing.md },
   sectionRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: spacing.sm, marginBottom: spacing.md },
   limit: { color: colors.textFaint, fontSize: 12 },

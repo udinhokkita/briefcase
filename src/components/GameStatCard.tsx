@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { colors, radius, spacing } from '../theme/colors';
+import { colors, radius, spacing, shadow } from '../theme/colors';
 import { gameById } from '../data/games';
 import { PlayerGame } from '../data/mockData';
 import { useStore } from '../store/useStore';
@@ -42,8 +42,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.card,
     borderRadius: radius.lg,
     borderWidth: 1,
-    padding: spacing.md,
+    padding: spacing.lg,
     marginBottom: spacing.md,
+    ...shadow.soft,
   },
   header: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.md, flexWrap: 'wrap' },
   dot: { width: 10, height: 10, borderRadius: 5 },

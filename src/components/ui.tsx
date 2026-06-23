@@ -10,27 +10,46 @@ import {
   ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors, radius, spacing } from '../theme/colors';
+import { LinearGradient } from 'expo-linear-gradient';
+import { colors, radius, spacing, shadow, gradients, Gradient } from '../theme/colors';
 
 export const Card: React.FC<{ children: React.ReactNode; style?: StyleProp<ViewStyle> }> = ({
   children,
   style,
 }) => <View style={[styles.card, style]}>{children}</View>;
 
+export const GradientCard: React.FC<{
+  children: React.ReactNode;
+  colorsArr?: Gradient;
+  style?: StyleProp<ViewStyle>;
+  glow?: boolean;
+}> = ({ children, colorsArr = gradients.hero, style, glow }) => (
+  <LinearGradient
+    colors={colorsArr}
+    start={{ x: 0, y: 0 }}
+    end={{ x: 1, y: 1 }}
+    style={[styles.gradientCard, glow && shadow.glow, style]}
+  >
+    {children}
+  </LinearGradient>
+);
+
 export const Screen: React.FC<{ children: React.ReactNode; scroll?: boolean; style?: StyleProp<ViewStyle> }> = ({
   children,
   scroll = true,
   style,
 }) => (
-  <SafeAreaView style={styles.screen} edges={['top']}>
-    {scroll ? (
-      <ScrollView contentContainerStyle={[styles.scrollContent, style]} showsVerticalScrollIndicator={false}>
-        {children}
-      </ScrollView>
-    ) : (
-      <View style={[{ flex: 1 }, style]}>{children}</View>
-    )}
-  </SafeAreaView>
+  <LinearGradient colors={gradients.screen} style={styles.screen}>
+    <SafeAreaView style={styles.flex} edges={['top']}>
+      {scroll ? (
+        <ScrollView contentContainerStyle={[styles.scrollContent, style]} showsVerticalScrollIndicator={false}>
+          {children}
+        </ScrollView>
+      ) : (
+        <View style={[styles.flex, style]}>{children}</View>
+      )}
+    </SafeAreaView>
+  </LinearGradient>
 );
 
 export const H1: React.FC<{ children: React.ReactNode; style?: StyleProp<TextStyle> }> = ({ children, style }) => (
@@ -45,6 +64,12 @@ export const Body: React.FC<{ children: React.ReactNode; muted?: boolean; style?
   style,
 }) => <Text style={[styles.body, muted && { color: colors.textMuted }, style]}>{children}</Text>;
 
+export const Eyebrow: React.FC<{ children: React.ReactNode; color?: string; style?: StyleProp<TextStyle> }> = ({
+  children,
+  color,
+  style,
+}) => <Text style={[styles.eyebrow, color ? { color } : null, style]}>{children}</Text>;
+
 export const Pill: React.FC<{
   label: string;
   active?: boolean;
@@ -55,10 +80,10 @@ export const Pill: React.FC<{
     <View
       style={[
         styles.pill,
-        active && { backgroundColor: color ?? colors.primary, borderColor: color ?? colors.primary },
+        active && { backgroundColor: color ?? colors.primary, borderColor: color ?? colors.primary, ...shadow.soft },
       ]}
     >
-      <Text style={[styles.pillText, active && { color: colors.bg, fontWeight: '700' }]}>{label}</Text>
+      <Text style={[styles.pillText, active && { color: colors.bg, fontWeight: '800' }]}>{label}</Text>
     </View>
   );
   if (onPress) {
@@ -85,14 +110,36 @@ export const Button: React.FC<{
   style?: StyleProp<ViewStyle>;
   icon?: React.ReactNode;
 }> = ({ title, onPress, variant = 'primary', disabled, style, icon }) => {
-  const bg =
-    variant === 'primary' ? colors.primary : variant === 'success' ? colors.success : 'transparent';
+  const gradient = variant === 'primary' ? gradients.gold : variant === 'success' ? gradients.green : null;
   const textColor =
     variant === 'primary' || variant === 'success'
       ? colors.bg
       : variant === 'ghost'
       ? colors.textMuted
       : colors.primary;
+
+  const inner = (
+    <>
+      {icon}
+      <Text style={[styles.btnText, { color: textColor }]}>{title}</Text>
+    </>
+  );
+
+  if (gradient) {
+    return (
+      <TouchableOpacity onPress={onPress} disabled={disabled} activeOpacity={0.85} style={[disabled && { opacity: 0.4 }, style]}>
+        <LinearGradient
+          colors={gradient}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[styles.btn, !disabled && (variant === 'primary' ? shadow.glow : shadow.soft)]}
+        >
+          {inner}
+        </LinearGradient>
+      </TouchableOpacity>
+    );
+  }
+
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -100,14 +147,13 @@ export const Button: React.FC<{
       activeOpacity={0.8}
       style={[
         styles.btn,
-        { backgroundColor: bg },
+        { backgroundColor: 'transparent' },
         variant === 'outline' && { borderWidth: 1.5, borderColor: colors.primary },
         disabled && { opacity: 0.4 },
         style,
       ]}
     >
-      {icon}
-      <Text style={[styles.btnText, { color: textColor }]}>{title}</Text>
+      {inner}
     </TouchableOpacity>
   );
 };
@@ -119,8 +165,9 @@ export const Row: React.FC<{ children: React.ReactNode; style?: StyleProp<ViewSt
 export const Divider = () => <View style={styles.divider} />;
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.bg },
-  scrollContent: { padding: spacing.lg, paddingBottom: spacing.xxl * 2 },
+  flex: { flex: 1 },
+  screen: { flex: 1 },
+  scrollContent: { padding: spacing.lg, paddingBottom: spacing.xxl * 3 },
   card: {
     backgroundColor: colors.card,
     borderRadius: radius.lg,
@@ -128,16 +175,26 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     marginBottom: spacing.md,
+    ...shadow.soft,
   },
-  h1: { color: colors.text, fontSize: 26, fontWeight: '800', letterSpacing: -0.5 },
-  h2: { color: colors.text, fontSize: 18, fontWeight: '700' },
-  body: { color: colors.text, fontSize: 14, lineHeight: 20 },
+  gradientCard: {
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    borderWidth: 1,
+    borderColor: colors.hairline,
+    marginBottom: spacing.md,
+    overflow: 'hidden',
+  },
+  h1: { color: colors.text, fontSize: 30, fontWeight: '900', letterSpacing: -0.8 },
+  h2: { color: colors.text, fontSize: 19, fontWeight: '800', letterSpacing: -0.3 },
+  body: { color: colors.text, fontSize: 14, lineHeight: 21 },
+  eyebrow: { color: colors.primary, fontSize: 11, fontWeight: '800', letterSpacing: 1.5, textTransform: 'uppercase' },
   pill: {
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     borderRadius: radius.pill,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.borderStrong,
     backgroundColor: colors.cardAlt,
     marginRight: spacing.sm,
     marginBottom: spacing.sm,
@@ -156,10 +213,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    paddingVertical: 14,
+    paddingVertical: 15,
     paddingHorizontal: spacing.lg,
     borderRadius: radius.md,
   },
-  btnText: { fontSize: 15, fontWeight: '700' },
+  btnText: { fontSize: 15, fontWeight: '800', letterSpacing: 0.2 },
   divider: { height: 1, backgroundColor: colors.border, marginVertical: spacing.md },
 });

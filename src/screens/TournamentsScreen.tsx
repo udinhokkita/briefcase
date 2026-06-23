@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { colors, radius, spacing } from '../theme/colors';
+import { colors, radius, spacing, shadow } from '../theme/colors';
 import { Screen, Body } from '../components/ui';
 import { TopBar } from '../components/TopBar';
 import { useStore, useT } from '../store/useStore';
@@ -100,14 +100,14 @@ const TournamentRow: React.FC<{ tr: Tournament; onPress: () => void }> = ({ tr, 
 };
 
 const styles = StyleSheet.create({
-  createBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: colors.primary, paddingHorizontal: spacing.md, paddingVertical: 8, borderRadius: radius.pill },
+  createBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: colors.primary, paddingHorizontal: spacing.md, paddingVertical: 9, borderRadius: radius.pill, ...shadow.glow },
   createText: { color: colors.bg, fontWeight: '800', fontSize: 12 },
   tabs: { flexDirection: 'row', backgroundColor: colors.card, borderRadius: radius.md, padding: 4, marginBottom: spacing.lg, borderWidth: 1, borderColor: colors.border },
   tab: { flex: 1, paddingVertical: 8, borderRadius: radius.sm, alignItems: 'center' },
-  tabActive: { backgroundColor: colors.primary },
+  tabActive: { backgroundColor: colors.primary, ...shadow.soft },
   tabText: { color: colors.textMuted, fontWeight: '700', fontSize: 13 },
   tabTextActive: { color: colors.bg },
-  card: { backgroundColor: colors.card, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, padding: spacing.lg, marginBottom: spacing.md },
+  card: { backgroundColor: colors.card, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, padding: spacing.lg, marginBottom: spacing.md, ...shadow.soft },
   gameTag: { borderWidth: 1, borderRadius: 6, paddingHorizontal: 8, paddingVertical: 2 },
   gameTagText: { fontSize: 11, fontWeight: '800' },
   format: { color: colors.textMuted, fontSize: 12 },

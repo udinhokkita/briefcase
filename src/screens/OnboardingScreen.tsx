@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, radius, spacing } from '../theme/colors';
-import { Button, H1, H2, Body } from '../components/ui';
+import { LinearGradient } from 'expo-linear-gradient';
+import { colors, radius, spacing, gradients, shadow } from '../theme/colors';
+import { Button, H1, H2, Body, Eyebrow } from '../components/ui';
+import { BrandMark } from '../components/TopBar';
 import { useStore, useT } from '../store/useStore';
 import { GAMES, GameId } from '../data/games';
 
@@ -22,142 +24,153 @@ export const OnboardingScreen: React.FC = () => {
     setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
 
   return (
-    <SafeAreaView style={styles.screen}>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={styles.logoRow}>
-          <Ionicons name="briefcase" size={30} color={colors.primary} />
-          <Text style={styles.logoText}>
-            Briefcase <Text style={{ color: colors.primary }}>Esports</Text>
-          </Text>
-        </View>
-        <View style={styles.flagBar}>
-          <View style={{ flex: 1, backgroundColor: colors.accent }} />
-          <View style={{ flex: 1, backgroundColor: colors.white }} />
-          <View style={{ flex: 1, backgroundColor: colors.blue }} />
-          <View style={{ flex: 1, backgroundColor: colors.primary }} />
-        </View>
-
-        {step === 0 && (
-          <View>
-            <H1 style={{ marginTop: spacing.xl }}>{t('welcome_title')}</H1>
-            <Body muted style={{ marginTop: spacing.sm, fontSize: 15 }}>
-              {t('welcome_sub')}
-            </Body>
-
-            <H2 style={{ marginTop: spacing.xxl, marginBottom: spacing.md }}>{t('choose_language')}</H2>
-            <View style={{ flexDirection: 'row', gap: spacing.md }}>
-              <LangCard
-                active={lang === 'ms'}
-                flag="🇲🇾"
-                title="Bahasa Malaysia"
-                sub="Lalai / Default"
-                onPress={() => setLang('ms')}
-              />
-              <LangCard
-                active={lang === 'en'}
-                flag="🌐"
-                title="English"
-                sub="Toggle"
-                onPress={() => setLang('en')}
-              />
-            </View>
-
-            <Button title={t('continue')} onPress={() => setStep(1)} style={{ marginTop: spacing.xxl }} />
+    <LinearGradient colors={gradients.screen} style={styles.screen}>
+      <LinearGradient
+        colors={gradients.heroGlow}
+        start={{ x: 0.1, y: 0 }}
+        end={{ x: 0.9, y: 1 }}
+        style={styles.glow}
+      />
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+          <View style={styles.logoRow}>
+            <BrandMark size={46} />
+            <Text style={styles.logoText}>
+              Briefcase <Text style={{ color: colors.primary }}>Esports</Text>
+            </Text>
           </View>
-        )}
+          <View style={styles.flagBar}>
+            <View style={{ flex: 1, backgroundColor: colors.accent }} />
+            <View style={{ flex: 1, backgroundColor: colors.white }} />
+            <View style={{ flex: 1, backgroundColor: colors.blue }} />
+            <View style={{ flex: 1, backgroundColor: colors.primary }} />
+          </View>
 
-        {step === 1 && (
-          <View>
-            <View style={styles.pdpaHeader}>
-              <Ionicons name="shield-checkmark" size={22} color={colors.green} />
-              <H2 style={{ marginLeft: spacing.sm }}>{t('pdpa_title')}</H2>
+          {step === 0 && (
+            <View>
+              <Eyebrow style={{ marginTop: spacing.xl }}>Esports Malaysia</Eyebrow>
+              <H1 style={{ marginTop: spacing.sm }}>{t('welcome_title')}</H1>
+              <Body muted style={{ marginTop: spacing.sm, fontSize: 15 }}>
+                {t('welcome_sub')}
+              </Body>
+
+              <H2 style={{ marginTop: spacing.xxl, marginBottom: spacing.md }}>{t('choose_language')}</H2>
+              <View style={{ flexDirection: 'row', gap: spacing.md }}>
+                <LangCard
+                  active={lang === 'ms'}
+                  flag="🇲🇾"
+                  title="Bahasa Malaysia"
+                  sub="Lalai / Default"
+                  onPress={() => setLang('ms')}
+                />
+                <LangCard
+                  active={lang === 'en'}
+                  flag="🌐"
+                  title="English"
+                  sub="Toggle"
+                  onPress={() => setLang('en')}
+                />
+              </View>
+
+              <Button title={t('continue')} onPress={() => setStep(1)} style={{ marginTop: spacing.xxl }} />
             </View>
-            <Body muted style={{ marginTop: spacing.md }}>
-              {t('pdpa_intro')}
-            </Body>
+          )}
 
-            <View style={styles.pdpaList}>
-              {[t('pdpa_item_profile'), t('pdpa_item_stats'), t('pdpa_item_contact')].map((item) => (
-                <View key={item} style={styles.pdpaItem}>
-                  <Ionicons name="ellipse" size={6} color={colors.primary} />
-                  <Body style={{ marginLeft: spacing.md, flex: 1 }}>{item}</Body>
+          {step === 1 && (
+            <View>
+              <View style={styles.pdpaHeader}>
+                <View style={styles.shieldWrap}>
+                  <Ionicons name="shield-checkmark" size={20} color={colors.green} />
                 </View>
-              ))}
-            </View>
+                <H2 style={{ marginLeft: spacing.sm }}>{t('pdpa_title')}</H2>
+              </View>
+              <Body muted style={{ marginTop: spacing.md }}>
+                {t('pdpa_intro')}
+              </Body>
 
-            <TouchableOpacity style={styles.consentRow} onPress={() => setConsentLocal((c) => !c)} activeOpacity={0.7}>
-              <Ionicons
-                name={consent ? 'checkbox' : 'square-outline'}
-                size={24}
-                color={consent ? colors.primary : colors.textMuted}
+              <View style={styles.pdpaList}>
+                {[t('pdpa_item_profile'), t('pdpa_item_stats'), t('pdpa_item_contact')].map((item) => (
+                  <View key={item} style={styles.pdpaItem}>
+                    <Ionicons name="ellipse" size={6} color={colors.primary} />
+                    <Body style={{ marginLeft: spacing.md, flex: 1 }}>{item}</Body>
+                  </View>
+                ))}
+              </View>
+
+              <TouchableOpacity style={[styles.consentRow, consent && styles.consentRowActive]} onPress={() => setConsentLocal((c) => !c)} activeOpacity={0.7}>
+                <Ionicons
+                  name={consent ? 'checkbox' : 'square-outline'}
+                  size={24}
+                  color={consent ? colors.primary : colors.textMuted}
+                />
+                <Body style={{ marginLeft: spacing.md, flex: 1 }}>{t('pdpa_consent_check')}</Body>
+              </TouchableOpacity>
+
+              <TouchableOpacity>
+                <Text style={styles.link}>{t('pdpa_privacy_policy')}</Text>
+              </TouchableOpacity>
+
+              <Button
+                title={t('continue')}
+                onPress={() => {
+                  setConsent(true);
+                  setStep(2);
+                }}
+                disabled={!consent}
+                style={{ marginTop: spacing.xxl }}
               />
-              <Body style={{ marginLeft: spacing.md, flex: 1 }}>{t('pdpa_consent_check')}</Body>
-            </TouchableOpacity>
-
-            <TouchableOpacity>
-              <Text style={styles.link}>{t('pdpa_privacy_policy')}</Text>
-            </TouchableOpacity>
-
-            <Button
-              title={t('continue')}
-              onPress={() => {
-                setConsent(true);
-                setStep(2);
-              }}
-              disabled={!consent}
-              style={{ marginTop: spacing.xxl }}
-            />
-          </View>
-        )}
-
-        {step === 2 && (
-          <View>
-            <H2 style={{ marginTop: spacing.lg }}>{t('onboarding_games_title')}</H2>
-            <Body muted style={{ marginTop: spacing.sm }}>
-              {t('onboarding_games_sub')}
-            </Body>
-
-            <View style={{ marginTop: spacing.lg }}>
-              {GAMES.map((g) => {
-                const active = picked.includes(g.id);
-                return (
-                  <TouchableOpacity
-                    key={g.id}
-                    activeOpacity={0.8}
-                    onPress={() => togglePick(g.id)}
-                    style={[styles.gameRow, active && { borderColor: g.color, backgroundColor: g.color + '1A' }]}
-                  >
-                    <View style={[styles.gameDot, { backgroundColor: g.color }]} />
-                    <View style={{ flex: 1 }}>
-                      <Text style={styles.gameName}>{g.name}</Text>
-                      <Text style={styles.gameShort}>{g.short}</Text>
-                    </View>
-                    <Ionicons
-                      name={active ? 'checkmark-circle' : 'add-circle-outline'}
-                      size={24}
-                      color={active ? g.color : colors.textMuted}
-                    />
-                  </TouchableOpacity>
-                );
-              })}
             </View>
+          )}
 
-            <Button
-              title={t('get_started')}
-              onPress={completeOnboarding}
-              disabled={picked.length === 0}
-              style={{ marginTop: spacing.xl }}
-            />
+          {step === 2 && (
+            <View>
+              <H2 style={{ marginTop: spacing.lg }}>{t('onboarding_games_title')}</H2>
+              <Body muted style={{ marginTop: spacing.sm }}>
+                {t('onboarding_games_sub')}
+              </Body>
+
+              <View style={{ marginTop: spacing.lg }}>
+                {GAMES.map((g) => {
+                  const active = picked.includes(g.id);
+                  return (
+                    <TouchableOpacity
+                      key={g.id}
+                      activeOpacity={0.8}
+                      onPress={() => togglePick(g.id)}
+                      style={[styles.gameRow, active && { borderColor: g.color, backgroundColor: g.color + '1A', ...shadow.soft }]}
+                    >
+                      <View style={[styles.gameDot, { backgroundColor: g.color }]} />
+                      <View style={{ flex: 1 }}>
+                        <Text style={styles.gameName}>{g.name}</Text>
+                        <Text style={styles.gameShort}>{g.short}</Text>
+                      </View>
+                      <Ionicons
+                        name={active ? 'checkmark-circle' : 'add-circle-outline'}
+                        size={24}
+                        color={active ? g.color : colors.textMuted}
+                      />
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+
+              <Button
+                title={t('get_started')}
+                onPress={completeOnboarding}
+                disabled={picked.length === 0}
+                style={{ marginTop: spacing.xl }}
+              />
+            </View>
+          )}
+
+          <View style={styles.dots}>
+            {[0, 1, 2].map((i) => (
+              <View key={i} style={[styles.dot, step === i && { backgroundColor: colors.primary, width: 22 }]} />
+            ))}
           </View>
-        )}
-
-        <View style={styles.dots}>
-          {[0, 1, 2].map((i) => (
-            <View key={i} style={[styles.dot, step === i && { backgroundColor: colors.primary, width: 22 }]} />
-          ))}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+        </ScrollView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
@@ -171,20 +184,21 @@ const LangCard: React.FC<{ active: boolean; flag: string; title: string; sub: st
   <TouchableOpacity
     activeOpacity={0.8}
     onPress={onPress}
-    style={[styles.langCard, active && { borderColor: colors.primary, backgroundColor: colors.primary + '1A' }]}
+    style={[styles.langCard, active && { borderColor: colors.primary, backgroundColor: colors.primary + '14', ...shadow.glow }]}
   >
-    <Text style={{ fontSize: 30 }}>{flag}</Text>
+    <Text style={{ fontSize: 32 }}>{flag}</Text>
     <Text style={styles.langTitle}>{title}</Text>
     <Text style={styles.langSub}>{sub}</Text>
   </TouchableOpacity>
 );
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.bg },
+  screen: { flex: 1 },
+  glow: { position: 'absolute', top: -120, left: -60, right: -60, height: 380, opacity: 0.55, borderRadius: 300 },
   content: { padding: spacing.xl, paddingBottom: spacing.xxl * 2 },
-  logoRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginTop: spacing.lg },
-  logoText: { color: colors.text, fontSize: 22, fontWeight: '800' },
-  flagBar: { flexDirection: 'row', height: 5, borderRadius: 3, overflow: 'hidden', marginTop: spacing.md },
+  logoRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginTop: spacing.lg },
+  logoText: { color: colors.text, fontSize: 22, fontWeight: '900', letterSpacing: -0.4 },
+  flagBar: { flexDirection: 'row', height: 5, borderRadius: 3, overflow: 'hidden', marginTop: spacing.lg },
   langCard: {
     flex: 1,
     backgroundColor: colors.card,
@@ -194,10 +208,12 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
     alignItems: 'center',
     gap: 4,
+    ...shadow.soft,
   },
-  langTitle: { color: colors.text, fontWeight: '700', fontSize: 14, marginTop: spacing.sm, textAlign: 'center' },
+  langTitle: { color: colors.text, fontWeight: '800', fontSize: 14, marginTop: spacing.sm, textAlign: 'center' },
   langSub: { color: colors.textMuted, fontSize: 12 },
   pdpaHeader: { flexDirection: 'row', alignItems: 'center', marginTop: spacing.xl },
+  shieldWrap: { width: 38, height: 38, borderRadius: 12, backgroundColor: colors.green + '1F', alignItems: 'center', justifyContent: 'center' },
   pdpaList: { marginTop: spacing.lg, gap: spacing.md },
   pdpaItem: { flexDirection: 'row', alignItems: 'center' },
   consentRow: {
@@ -207,10 +223,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.card,
     padding: spacing.lg,
     borderRadius: radius.md,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: colors.border,
+    ...shadow.soft,
   },
-  link: { color: colors.primary, marginTop: spacing.md, fontWeight: '600', fontSize: 13 },
+  consentRowActive: { borderColor: colors.primary + '99', backgroundColor: colors.primary + '12' },
+  link: { color: colors.primary, marginTop: spacing.md, fontWeight: '700', fontSize: 13 },
   gameRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -223,7 +241,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   gameDot: { width: 12, height: 12, borderRadius: 6 },
-  gameName: { color: colors.text, fontWeight: '700', fontSize: 14 },
+  gameName: { color: colors.text, fontWeight: '800', fontSize: 14 },
   gameShort: { color: colors.textMuted, fontSize: 12, marginTop: 2 },
   dots: { flexDirection: 'row', justifyContent: 'center', gap: 6, marginTop: spacing.xxl },
   dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.border },

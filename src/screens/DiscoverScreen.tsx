@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity } from 
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { colors, radius, spacing } from '../theme/colors';
+import { colors, radius, spacing, shadow } from '../theme/colors';
 import { Screen, Body } from '../components/ui';
 import { TopBar } from '../components/TopBar';
 import { PlayerCard } from '../components/PlayerCard';
@@ -136,7 +136,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     paddingHorizontal: spacing.md,
-    paddingVertical: 10,
+    paddingVertical: 12,
+    ...shadow.soft,
   },
   searchInput: { flex: 1, color: colors.text, fontSize: 14, paddingVertical: 2 },
   filterLabel: { color: colors.textMuted, fontSize: 12, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 },

@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, radius, spacing } from '../theme/colors';
+import { LinearGradient } from 'expo-linear-gradient';
+import { colors, radius, spacing, gradients, shadow } from '../theme/colors';
 import { useStore } from '../store/useStore';
 
 export const LangToggle: React.FC = () => {
@@ -15,13 +16,26 @@ export const LangToggle: React.FC = () => {
   );
 };
 
-export const TopBar: React.FC<{ title: string; subtitle?: string; right?: React.ReactNode }> = ({
+export const BrandMark: React.FC<{ size?: number }> = ({ size = 40 }) => (
+  <LinearGradient
+    colors={gradients.gold}
+    start={{ x: 0, y: 0 }}
+    end={{ x: 1, y: 1 }}
+    style={[styles.brand, { width: size, height: size, borderRadius: size * 0.32 }, shadow.glow]}
+  >
+    <Ionicons name="briefcase" size={size * 0.5} color={colors.bg} />
+  </LinearGradient>
+);
+
+export const TopBar: React.FC<{ title: string; subtitle?: string; right?: React.ReactNode; brand?: boolean }> = ({
   title,
   subtitle,
   right,
+  brand,
 }) => (
   <View style={styles.bar}>
-    <View style={{ flex: 1 }}>
+    {brand ? <BrandMark size={42} /> : null}
+    <View style={{ flex: 1, marginLeft: brand ? spacing.md : 0 }}>
       {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
       <Text style={styles.title}>{title}</Text>
     </View>
@@ -31,8 +45,9 @@ export const TopBar: React.FC<{ title: string; subtitle?: string; right?: React.
 
 const styles = StyleSheet.create({
   bar: { flexDirection: 'row', alignItems: 'center', marginBottom: spacing.lg },
-  title: { color: colors.text, fontSize: 24, fontWeight: '800', letterSpacing: -0.5 },
-  subtitle: { color: colors.textMuted, fontSize: 13, marginBottom: 2 },
+  brand: { alignItems: 'center', justifyContent: 'center' },
+  title: { color: colors.text, fontSize: 25, fontWeight: '900', letterSpacing: -0.6 },
+  subtitle: { color: colors.textMuted, fontSize: 13, marginBottom: 2, fontWeight: '600' },
   langBtn: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -41,7 +56,7 @@ const styles = StyleSheet.create({
     borderColor: colors.primary + '55',
     borderWidth: 1,
     paddingHorizontal: spacing.md,
-    paddingVertical: 6,
+    paddingVertical: 7,
     borderRadius: radius.pill,
   },
   langBtnText: { color: colors.primary, fontWeight: '800', fontSize: 12 },

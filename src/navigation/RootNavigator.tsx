@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { colors } from '../theme/colors';
+import { colors, shadow } from '../theme/colors';
 import { useStore, useT } from '../store/useStore';
 import { RootStackParamList, TabParamList } from './types';
 
@@ -49,12 +49,14 @@ const MainTabs: React.FC = () => {
         tabBarInactiveTintColor: colors.textFaint,
         tabBarStyle: {
           backgroundColor: colors.bgElevated,
-          borderTopColor: colors.border,
-          height: Platform.OS === 'ios' ? 86 : 64,
-          paddingBottom: Platform.OS === 'ios' ? 28 : 8,
-          paddingTop: 8,
+          borderTopColor: colors.hairline,
+          borderTopWidth: 1,
+          height: Platform.OS === 'ios' ? 90 : 70,
+          paddingBottom: Platform.OS === 'ios' ? 30 : 10,
+          paddingTop: 10,
+          ...shadow.medium,
         },
-        tabBarLabelStyle: { fontSize: 10, fontWeight: '700' },
+        tabBarLabelStyle: { fontSize: 10, fontWeight: '800', letterSpacing: 0.2 },
         tabBarLabel: labels[route.name],
         tabBarIcon: ({ color, size, focused }) => (
           <Ionicons name={focused ? TAB_ICONS[route.name] : (`${TAB_ICONS[route.name]}-outline` as keyof typeof Ionicons.glyphMap)} size={size} color={color} />

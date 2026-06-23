@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, radius, spacing } from '../theme/colors';
+import { colors, radius, spacing, shadow } from '../theme/colors';
 import { Avatar } from './Avatar';
 import { Player } from '../data/mockData';
 import { gameById } from '../data/games';
@@ -50,8 +50,9 @@ const styles = StyleSheet.create({
     borderRadius: radius.lg,
     borderWidth: 1,
     borderColor: colors.border,
-    padding: spacing.md,
+    padding: spacing.lg,
     marginBottom: spacing.md,
+    ...shadow.soft,
   },
   name: { color: colors.text, fontWeight: '700', fontSize: 15 },
   meta: { color: colors.textMuted, fontSize: 12, marginTop: 2 },
